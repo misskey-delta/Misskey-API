@@ -5,22 +5,15 @@
 		"noImplicitReturns": true,
 		"noFallthroughCasesInSwitch": true,
 		"sourceMap": false,
-		"target": "ES5",
+		"target": "ES6",
 		"module": "commonjs",
 		"removeComments": true,
 		"noLib": true,
 		"outDir": "built",
-		"rootDir": "src"
+		"rootDir": "src",
+		"declaration": false
 	},
 	"compileOnSave": false,
-	"atom": {
-		"rewriteTsconfig": true
-	},
-	"filesGlob": [
-		"./node_modules/typescript/lib/lib.es6.d.ts",
-		"./typings/bundle.d.ts",
-		"./src/**/*.ts"
-	],
 	"files": [
 		"./node_modules/typescript/lib/lib.es6.d.ts",
 		"./typings/bundle.d.ts",
