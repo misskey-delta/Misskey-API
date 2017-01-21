@@ -15,6 +15,7 @@ export interface IUser extends Document {
 	encryptedPassword: string;
 	followersCount: number;
 	followingCount: number;
+	id: string;
 	isDeleted: Boolean;
 	isEmailVerified: Boolean;
 	isPrivate: Boolean;
@@ -54,11 +55,12 @@ export interface IUserKey extends Document {
 
 export interface IApplication extends Document {
 	createdAt: Date;
-	userId: string | Types.ObjectId;
+	userid: string;
 	appKey: string;
 	callbackUrl: string;
 	description: string;
-	iconId: string | Types.ObjectId;
+	iconid: string;
+	id: string;
 	isDeleted: boolean;
 	isSuspended: boolean;
 	permissions: string[];
@@ -81,6 +83,7 @@ export interface IPost extends Document {
 	channel: string | Types.ObjectId | IChannel;
 	createdAt: Date;
 	cursor: number;
+	id: string;
 	isDeleted: boolean;
 	likesCount: number;
 	prevPost: string | Types.ObjectId | IPost;
@@ -108,6 +111,7 @@ export interface IRepost extends Document {
 	app: string | Types.ObjectId | IApplication;
 	createdAt: Date;
 	cursor: number;
+	id: string;
 	isDeleted: boolean;
 	post: string | Types.ObjectId | IPost;
 	type: string;
@@ -137,6 +141,7 @@ export interface IAlbumFile extends Document {
 	folder: string | Types.ObjectId | IAlbumFolder;
 	mimeType: string;
 	hash: string;
+	id: string;
 	isDeleted: boolean;
 	isHidden: boolean;
 	isPrivate: boolean;
@@ -151,6 +156,7 @@ export interface IAlbumFolder extends Document {
 	createdAt: Date;
 	color: string;
 	cursor: number;
+	id: string;
 	name: string;
 	parent: string | Types.ObjectId | IAlbumFolder;
 	user: string | Types.ObjectId | IUser;
@@ -158,6 +164,7 @@ export interface IAlbumFolder extends Document {
 
 export interface IAlbumTag extends Document {
 	color: string;
+	id: string;
 	name: string;
 	user: string | Types.ObjectId | IUser;
 }
@@ -177,6 +184,7 @@ export interface ITalkGroup extends Document {
 	createdAt: Date;
 	icon: string | Types.ObjectId | IAlbumFile;
 	iconPath: string;
+	id: string;
 	members: string[] | Types.ObjectId[] | IUser[];
 	name: string;
 	owner: string | Types.ObjectId | IUser;
@@ -185,6 +193,7 @@ export interface ITalkGroup extends Document {
 export interface ITalkGroupInvitation extends Document {
 	createdAt: Date;
 	group: string | Types.ObjectId | ITalkGroup;
+	id: string;
 	isDeclined: boolean;
 	text: string;
 	user: string | Types.ObjectId | IUser;
@@ -193,11 +202,13 @@ export interface ITalkGroupInvitation extends Document {
 export interface ITalkMessage extends Document {
 	createdAt: Date;
 	cursor: number;
+	id: string;
 	type: string;
 }
 
 export interface ITalkUserMessage extends ITalkMessage {
 	file: string | Types.ObjectId | IAlbumFile;
+	id: string;
 	isContentModified: boolean;
 	isDeleted: boolean;
 	isRead: boolean;
@@ -209,6 +220,7 @@ export interface ITalkUserMessage extends ITalkMessage {
 export interface ITalkGroupMessage extends ITalkMessage {
 	file: string | Types.ObjectId | IAlbumFile;
 	group: string | Types.ObjectId | ITalkGroup;
+	id: string;
 	isContentModified: boolean;
 	isDeleted: boolean;
 	reads: string[] | Types.ObjectId[] | IUser[];
@@ -267,6 +279,7 @@ export interface IBBSTopic extends Document {
 	pinnedPost: string | Types.ObjectId | IBBSPost;
 	title: string;
 	user: string | Types.ObjectId | IUser;
+	id: string;
 }
 
 export interface IBBSPost extends Document {
@@ -283,6 +296,7 @@ export interface IBBSPost extends Document {
 	text: string;
 	topic: string | Types.ObjectId | IBBSTopic;
 	user: string | Types.ObjectId | IUser;
+	id: string;
 }
 
 export interface IBBSWatching extends Document {
