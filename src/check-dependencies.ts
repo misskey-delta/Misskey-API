@@ -1,5 +1,5 @@
 import {logInfo, logDone, logWarn} from 'log-cool';
-import {exec, ExecOutputReturnValue} from 'shelljs';
+import {exec} from 'child_process';
 
 export default function(): void {
 	checkDependency('Node.js', 'node -v', x => x.match(/^v(.*)\r?\n$/)[1]);
@@ -10,14 +10,11 @@ export default function(): void {
 }
 
 function checkDependency(serviceName: string, command: string, transform: (x: string) => string): void {
-	const code = {
-		success: 0,
-		notFound: 127
-	};
-	const x = <ExecOutputReturnValue>exec(command, { silent: true });
-	if (x.code === code.success) {
-		logInfo(`${serviceName} ${transform(x.stdout)}`);
-	} else if (x.code === code.notFound) {
-		logWarn(`Unable to find ${serviceName}`);
-	}
+	exec(command, (error, stdout, stderr) => {
+    	if (error) {
+    		logWarn(`Unable to find ${serviceName}`);
+    	} else {
+    		logInfo(`${serviceName} ${transform(stdout.toString())}`);
+    	}
+	});
 }
