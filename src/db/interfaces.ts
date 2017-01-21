@@ -55,11 +55,11 @@ export interface IUserKey extends Document {
 
 export interface IApplication extends Document {
 	createdAt: Date;
-	userid: string;
+	userId: string | Types.ObjectId;
 	appKey: string;
 	callbackUrl: string;
 	description: string;
-	iconid: string;
+	iconId: string | Types.ObjectId;
 	id: string;
 	isDeleted: boolean;
 	isSuspended: boolean;
