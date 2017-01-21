@@ -10,11 +10,11 @@ export default function(): void {
 }
 
 function checkDependency(serviceName: string, command: string, transform: (x: string) => string): void {
-	exec(command, (error, stdout, stderr) => {
-    	if (error) {
-    		logWarn(`Unable to find ${serviceName}`);
-    	} else {
-    		logInfo(`${serviceName} ${transform(stdout.toString())}`);
-    	}
-	});
+    exec(command, (error, stdout, stderr) => {
+        if (error) {
+            logWarn(`Unable to find ${serviceName}`);
+        } else {
+            logInfo(`${serviceName} ${transform(stdout.toString())}`);
+        }
+    });
 }
