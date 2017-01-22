@@ -2,29 +2,19 @@ import {TalkMessage} from '../../../db/db';
 import {ITalkMessage, ITalkUserMessage, ITalkGroupMessage, IUser} from '../../../db/interfaces';
 import event from '../../../event';
 
-function isUserMessage(message: ITalkMessage): message is ITalkUserMessage {
-	return message.type === 'user-message';
-}
-
 /**
  * Talkのメッセージを削除します
  * @param user API利用ユーザー
  * @param messageId メッセージのID
  */
-export default function(
-	user: IUser,
-	messageId: string
-): Promise<void> {
+export default function(user: IUser, messageId: string): Promise<Object> {
 	if (messageId === '')  {
-		return <Promise<any>>Promise.reject('empty-message-id');
+		return <Promise<Object>>Promise.reject('empty-message-id');
 	}
 
-	return new Promise<void>((resolve, reject) => {
+	return new Promise<Object>((resolve, reject) => {
 		// 対象のメッセージを取得
-		TalkMessage.findOne({
-			_id: messageId,
-			user: user.id
-		}, (findErr: any, message: ITalkUserMessage | ITalkGroupMessage) => {
+		TalkMessage.findOne({_id: messageId, user: user.id}, (findErr: any, message: ITalkUserMessage | ITalkGroupMessage) => {
 			if (findErr !== null) {
 				return reject(findErr);
 			} else if (message === null) {
@@ -38,15 +28,15 @@ export default function(
 			message.isDeleted = true;
 			message.save((saveErr: any) => {
 				if (saveErr !== null) {
-					return reject(saveErr);
-				}
-
-				resolve();
-
-				if (isUserMessage(message)) {
-					event.publishDeleteTalkUserMessage(user.id, <string>message.recipient, message);
+					reject(saveErr);
 				} else {
-					event.publishDeleteTalkGroupMessage(<string>message.group, message);
+					resolve();
+
+					if (message.type === 'user-message') {
+						event.publishDeleteTalkUserMessage(user.id, <string>message.recipient, message);
+					} else {
+						event.publishDeleteTalkGroupMessage(<string>message.group, message);
+					}
 				}
 			});
 		});
