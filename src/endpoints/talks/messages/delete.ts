@@ -14,7 +14,7 @@ export default function(user: IUser, messageId: string): Promise<Object> {
 
 	return new Promise<Object>((resolve, reject) => {
 		// 対象のメッセージを取得
-		TalkMessage.findOne({_id: messageId, user: user.id}, (findErr: any, message: ITalkUserMessage | ITalkGroupMessage) => {
+		TalkMessage.findOne({_id: messageId, user: user.id}, (findErr: any, message: any) => {
 			if (findErr !== null) {
 				return reject(findErr);
 			} else if (message === null) {
