@@ -2,6 +2,10 @@ import {TalkMessage} from '../../../db/db';
 import {ITalkMessage, ITalkUserMessage, ITalkGroupMessage, IUser} from '../../../db/interfaces';
 import event from '../../../event';
 
+function isUserMessage(message: ITalkUserMessage | ITalkGroupMessage): message is ITalkUserMessage {
+	return message.type === 'user-message';
+}
+
 /**
  * Talkのメッセージを削除します
  * @param user API利用ユーザー
@@ -32,7 +36,7 @@ export default function(user: IUser, messageId: string): Promise<Object> {
 				} else {
 					resolve();
 
-					if (message.type === 'user-message') {
+					if (isUserMessage(message)) {
 						event.publishDeleteTalkUserMessage(user.id, <string>message.recipient, message);
 					} else {
 						event.publishDeleteTalkGroupMessage(<string>message.group, message);
