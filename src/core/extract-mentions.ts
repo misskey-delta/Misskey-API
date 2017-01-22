@@ -3,7 +3,7 @@ import {IUser} from '../db/interfaces';
 
 export default function(text: string): Promise<IUser[]> {
 	if (text === null) {
-		return Promise.resolve(null);
+		return Promise.reject(null);
 	}
 
 	let mentions = text.match(/@[a-zA-Z0-9\-]+/g);
@@ -18,7 +18,7 @@ export default function(text: string): Promise<IUser[]> {
 	}
 
 	if (mentions === null) {
-		return Promise.resolve(null);
+		return Promise.reject(null);
 	}
 
 	return Promise.all(mentions.map(mention => new Promise<IUser>((resolve, reject) => {
