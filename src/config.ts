@@ -31,7 +31,6 @@ export interface IConfig {
 	};
 	apiPasskey: string;
 	port: {
-		internal: number,
 		http: number,
 		https: number
 	};
