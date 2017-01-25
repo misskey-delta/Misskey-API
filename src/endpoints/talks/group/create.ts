@@ -14,6 +14,12 @@ export default function(
 	me: IUser,
 	name: string
 ): Promise<Object> {
+	if (me === undefined || me === null) {
+		return <Promise<any>>Promise.reject('plz-authenticate');
+	} else if (me.isSuspended) {
+		return <Promise<any>>Promise.reject('access-denied');
+	}
+
 	name = name.trim();
 
 	if (!isName(name)) {

@@ -21,6 +21,12 @@ export default function(
 	userId: string = null,
 	groupId: string = null
 ): Promise<Object> {
+	if (user === undefined || user === null) {
+		return <Promise<any>>Promise.reject('plz-authenticate');
+	} else if (user.isSuspended) {
+		return <Promise<any>>Promise.reject('access-denied');
+	}
+
 	const maxTextLength = 500;
 	text = text.trim();
 
