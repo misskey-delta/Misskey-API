@@ -25,8 +25,6 @@ export default function(user: IUser, id: string): Promise<void> {
 				return reject('post-is-deleted');
 			} else if (post.type === 'repost') {
 				return reject('no-like-to-repost');
-			} else if (post.user === user.id) {
-				return reject('no-yourself');
 			}
 			PostLike.findOne({
 				post: post.id,
@@ -61,11 +59,13 @@ export default function(user: IUser, id: string): Promise<void> {
 						author.save();
 					});
 
-					// 通知を作成
-					createNotification(null, <string>post.user, 'like', {
-						postId: post.id,
-						userId: user.id
-					});
+					// 自らに対してでなければ通知を作成
+					if (post.user.toString() !== user._id.toString()) {
+						createNotification(null, <string>post.user, 'like', {
+							postId: post.id,
+							userId: user.id
+						});
+					}
 				});
 			});
 		});
