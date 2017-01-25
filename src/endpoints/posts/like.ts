@@ -9,6 +9,13 @@ import createNotification from '../../core/create-notification';
  */
 export default function(user: IUser, id: string): Promise<void> {
 	return new Promise<void>((resolve, reject) => {
+		// check user
+		if (user === undefined || user === null) {
+			return reject('plz-authenticate');
+		} else if (user.isSuspended) {
+			return reject('access-denied');
+		}
+
 		Post.findById(id, (err: any, post: IPost) => {
 			if (err !== null) {
 				return reject(err);
