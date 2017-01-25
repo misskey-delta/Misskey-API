@@ -45,6 +45,7 @@ export default [
 	{ name: 'posts/reply', login: true, limitDuration: hour, limitMax: 120, minInterval: 3 * second, limitKey: 'post' },
 	{ name: 'posts/repost', login: true, limitDuration: hour, limitMax: 120, minInterval: 0.5 * second, limitKey: 'post' },
 	{ name: 'posts/like', login: true, limitDuration: hour, limitMax: 120 },
+	{ name: 'posts/unlike', login: true, limitDuration: hour, limitMax: 120 },
 	{ name: 'posts/search', login: false },
 	{ name: 'posts/likes/show', login: false },
 	{ name: 'posts/reposts/show', login: false },
