@@ -2,3 +2,4 @@
 /built
 npm-debug.log
 /tmp
+yarn.lock

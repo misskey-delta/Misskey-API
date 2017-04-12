@@ -21,6 +21,7 @@
     "@types/gulp": "3.8.32",
     "@types/gulp-tslint": "3.6.30",
     "@types/gulp-typescript": "0.0.32",
+    "@types/hapi": "^16.0.1",
     "@types/mongoose": "4.7.3",
     "@types/mongoose-auto-increment": "5.0.29",
     "@types/multer": "0.0.32",
