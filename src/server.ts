@@ -1,10 +1,16 @@
 import {dataSize} from 'powerful';
 import {logInfo, logWarn} from 'log-cool';
 import * as cluster from 'cluster';
-const hapi = require('hapi');
-import endpoints from './endpoints';
-import config from './config';
+import * as hapi from 'hapi';
+import hapiws = require('hapi-plugin-websocket');
+import * as Websocket from 'ws';
+import * as url from 'url';
+
+import httpEndpoints from './http-endpoints';
+import streamEndpoints from './stream-endpoints';
 import apiHandler from './api-handler';
+import streamHandler from './stream-handler';
+import config from './config';
 
 export default function(): void {
 	logInfo(`(cluster: ${cluster.worker.id}) Initializing server`);
@@ -12,7 +18,8 @@ export default function(): void {
 	const server = new hapi.Server();
 	server.connection({ port: config.port.http });
 
-	endpoints.forEach(endpoint => {
+	// REST endpoints routing
+	httpEndpoints.forEach(endpoint => {
 		if (endpoint.name === 'album/files/upload') {
 			server.route({
 				method: 'post',
@@ -38,6 +45,27 @@ export default function(): void {
 				}
 			});
 		}
+	});
+
+	// Stream endpoints routing
+	server.register(hapiws, (err) => {
+		streamEndpoints.forEach(name => {
+			server.route({
+				method: 'post',
+				path: `/streams/${name}`,
+				config: {
+					plugins: {
+						websocket: {
+							only: true,
+							connect: (wss: Websocket.Server, ws: Websocket) => {
+								streamHandler(name, ws);
+							}
+						}
+					}
+				},
+				handler: (req, reply) => {}
+			});
+		});
 	});
 
 	server.route({ method: '*', path: '/{p*}', handler: notFoundHandler });

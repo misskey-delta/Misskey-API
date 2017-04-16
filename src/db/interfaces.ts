@@ -175,6 +175,7 @@ export interface INotification extends Document {
 	createdAt: Date;
 	cursor: number;
 	isRead: boolean;
+	id: string;
 	type: string;
 	user: string | Types.ObjectId | IUser;
 }
