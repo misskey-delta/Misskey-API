@@ -63,7 +63,7 @@ export default function(): void {
 						}
 					}
 				},
-				handler: (req, reply) => {}
+				handler: (req, reply) => { return; }
 			});
 		});
 	});

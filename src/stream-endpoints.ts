@@ -1,5 +1,5 @@
 export default [
-  'home',
-  'talk',
-  'group-talk'
-]
+	'home',
+	'talk',
+	'group-talk'
+];

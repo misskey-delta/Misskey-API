@@ -7,53 +7,53 @@ import * as url_process from 'url';
 import * as query_process from 'querystring';
 
 export default async function(user: IUser, ws: Websocket): Promise<void> {
-  const query = (() => {
-    const q = url_process.parse(ws.upgradeReq.url).query;
-    return query_process.parse(q);
-  })();
+	const query = (() => {
+		const q = url_process.parse(ws.upgradeReq.url).query;
+		return query_process.parse(q);
+	})();
 
-  if(query['group-id'] === undefined || query['group-id'] === null) {
-    reject("'group-id' is required");
-    return;
-  }
+	if (query['group-id'] === undefined || query['group-id'] === null) {
+		reject("'group-id' is required");
+		return;
+	}
 
-  const group_id = query['group-id'];
-  
-  const client = event.subscribeGroupTalkStream(group_id, subscriber);
-  ws.on('close', (code, mes) => {
-    client.quit();
-  });
-  return;
+	const groupID = query['group-id'] as string;
 
-  async function subscriber(message: MisskeyEventMessage): Promise<void> {
-    const obj = await (() => {
-      switch(message.type) {
-        case 'message':
-          return talkmessages_show(user, message.value.id);
+	const client = event.subscribeGroupTalkStream(groupID, subscriber);
+	ws.on('close', (code, mes) => {
+		client.quit();
+	});
+	return;
 
-        default:
-          return Promise.resolve({
-            id: message.value
-          });
-      }
-    })();
-    sendEvent({
-      type: message.type,
-      value: obj
-    });
-  }
+	async function subscriber(message: MisskeyEventMessage): Promise<void> {
+		const obj = await (() => {
+			switch (message.type) {
+				case 'message':
+					return talkmessages_show(user, message.value.id);
 
-  function sendEvent(mes: MisskeyEventMessage): void {
-    ws.send(JSON.stringify(mes));
-  }
+				default:
+					return Promise.resolve({
+						id: message.value
+					});
+			}
+		})();
+		sendEvent({
+			type: message.type,
+			value: obj
+		});
+	}
 
-  function reject(mes: string): void {
-    sendEvent({
-      type: 'error',
-      value: {
-        message: mes
-      }
-    });
-    ws.close();
-  }
+	function sendEvent(mes: MisskeyEventMessage): void {
+		ws.send(JSON.stringify(mes));
+	}
+
+	function reject(mes: string): void {
+		sendEvent({
+			type: 'error',
+			value: {
+				message: mes
+			}
+		});
+		ws.close();
+	}
 }

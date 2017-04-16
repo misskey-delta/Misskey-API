@@ -4,8 +4,8 @@ import {IUser, IPost, IRepost, IUserFollowing, INotification, ITalkGroup, ITalkM
 import config from './config';
 
 export interface MisskeyEventMessage {
-	type: string,
-	value: any
+	type: string;
+	value: any;
 }
 
 class MisskeyEvent {
