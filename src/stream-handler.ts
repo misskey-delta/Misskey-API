@@ -43,7 +43,6 @@ export default async function(name: string, ws: Websocket): Promise<void> {
 		return;
 	}
 
-	ws.send("success");
 	const handler = require(`./stream-handlers/${name}`).default;
 	handler(user, ws);
 }
