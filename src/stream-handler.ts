@@ -5,8 +5,11 @@ import * as query_process from 'querystring';
 import config from './config';
 import { User } from './db/db';
 import { IUser } from './db/interfaces';
+import { logInfo } from 'log-cool';
 
 export default async function(name: string, ws: Websocket): Promise<void> {
+	logInfo(`Request: stream /streams/${name}`);
+
 	const query = (() => {
 		const url = ws.upgradeReq.url;
 		const querystring: string = url_process.parse(url).query;
