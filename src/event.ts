@@ -1,9 +1,12 @@
 import * as redis from 'redis';
 import {UserFollowing} from './db/db';
-import {IPost, IRepost, IUserFollowing, INotification, ITalkGroup, ITalkMessage, ITalkUserMessage} from './db/interfaces';
+import {IUser, IPost, IRepost, IUserFollowing, INotification, ITalkGroup, ITalkMessage, ITalkUserMessage} from './db/interfaces';
 import config from './config';
 
-// type MisskeyEventType = 'notification' | 'bar';
+export interface MisskeyEventMessage {
+	type: string;
+	value: any;
+}
 
 class MisskeyEvent {
 	private redisConnection: any;
@@ -43,8 +46,16 @@ class MisskeyEvent {
 	public publishNotification(notification: INotification): void {
 		this.publish(`user-stream:${notification.user}`, JSON.stringify({
 			type: 'notification',
-			value: notification.toObject()
+			value: {
+				id: notification.id
+			}
 		}));
+	}
+
+	public subscribeUserStream(userID: string, onMessage: (messsage: MisskeyEventMessage) => any): redis.RedisClient {
+		return this.subscribe(`user-stream:${userID}`, mesStr => {
+			onMessage(JSON.parse(mesStr) as MisskeyEventMessage);
+		});
 	}
 
 	public publishReadTalkUserMessage(otherpartyId: string, meId: string, message: ITalkMessage): void {
@@ -65,6 +76,12 @@ class MisskeyEvent {
 		}));
 	}
 
+	public subscribeUserTalkStream(userID: string, otherpartyID: string, onMessage: (message: MisskeyEventMessage) => any): redis.RedisClient {
+		return this.subscribe(`talk-user-stream:${userID}-${otherpartyID}`, mesStr => {
+			onMessage(JSON.parse(mesStr) as MisskeyEventMessage);
+		});
+	}
+
 	public publishReadTalkGroupMessage(groupId: string, message: ITalkMessage): void {
 		this.publish(`talk-group-stream:${groupId}`, JSON.stringify({
 			type: 'read',
@@ -77,6 +94,12 @@ class MisskeyEvent {
 			type: 'delete-message',
 			value: message.id
 		}));
+	}
+
+	public subscribeGroupTalkStream(groupID: string, onMessage: (message: MisskeyEventMessage) => any): redis.RedisClient {
+		return this.subscribe(`talk-group-stream:${groupID}`, mesStr => {
+			onMessage(JSON.parse(mesStr) as MisskeyEventMessage);
+		});
 	}
 
 	public publishUserTalkMessage(meId: string, recipientId: string, message: ITalkUserMessage): void {
@@ -111,6 +134,25 @@ class MisskeyEvent {
 
 	private publish(channel: string, message: string): void {
 		this.redisConnection.publish(`misskey:${channel}`, message);
+	}
+
+	private subscribe(channel: string, onMessage: (message: string) => any): redis.RedisClient {
+		const subscriber = redis.createClient(
+			config.redis.port,
+			config.redis.host,
+			{
+				password: config.redis.password
+			}
+		);
+
+		subscriber.subscribe(`misskey:${channel}`);
+		subscriber.on('message', onStreamMessage);
+
+		function onStreamMessage(_, message: string): void {
+			onMessage(message);
+		}
+
+		return subscriber;
 	}
 }
 
