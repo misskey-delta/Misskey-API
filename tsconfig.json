@@ -8,14 +8,12 @@
 		"target": "ES6",
 		"module": "commonjs",
 		"removeComments": true,
-		"noLib": true,
 		"outDir": "built",
 		"rootDir": "src",
 		"declaration": false
 	},
 	"compileOnSave": false,
 	"include": [
-		"./node_modules/typescript/lib/lib.es6.d.ts",
 		"./src/**/*.ts"
 	]
 }

@@ -8,10 +8,9 @@
   },
   "scripts": {
     "start": "node ./built/main.js",
-    "build": "gulp build",
-    "lint": "gulp lint",
-    "test": "gulp test",
-    "watch": "gulp watch"
+    "build": "tsc",
+    "lint": "find src -type f -name '*.ts' | xargs tslint",
+    "test": "npm run lint && npm run build"
   },
   "license": "MIT",
   "devDependencies": {
@@ -29,9 +28,6 @@
     "@types/redis": "0.12.36",
     "@types/request": "0.0.42",
     "@types/ws": "^0.0.40",
-    "gulp": "3.9.1",
-    "gulp-tslint": "8.0.0",
-    "gulp-typescript": "3.1.6",
     "tslint": "5.1.0",
     "typescript": "2.2.2"
   },
