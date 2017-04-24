@@ -20,8 +20,21 @@ export default function(endpoint: any, req: any, res: any): void {
 		return res(data).header('Access-Control-Allow-Origin', '*');
 	}
 
-	authenticate(req).then((context: any) => {
+	authenticate(req).then((context) => {
 		if (endpoint.login) {
+			// userない
+			if (context.user === undefined || context.user === null) {
+				reply({
+					error: 'plz-authenticate'
+				}).code(401);
+			}
+			// 凍結で使わせないやつは凍結されてたら蹴る
+			if (endpoint.denySuspended && context.user.isSuspended) {
+				reply({
+					error: 'denied-cuz-u-r-suspended'
+				}).code(403);
+			}
+
 			const limitKey = endpoint.hasOwnProperty('limitKey') ? endpoint.limitKey : endpoint.name;
 
 			if (endpoint.hasOwnProperty('minInterval')) {
