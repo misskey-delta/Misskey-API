@@ -1,4 +1,6 @@
 # Misskey API
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/misskey-delta/misskey-api.svg)](https://greenkeeper.io/)
 [![][travis-badge]][travis-link]
 [![][david-badge]][david-link]
 [![][david-dev-badge]][david-dev-link]
