@@ -39,4 +39,4 @@ export default function(
 	}, (err: any) => {
 		res({error: err}).code(500);
 	});
-};
+}
