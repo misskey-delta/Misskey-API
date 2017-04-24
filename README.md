@@ -19,8 +19,8 @@ Misskey API is written in TypeScript.
 ## How to build
 Ensure that you have [node-gyp](https://github.com/nodejs/node-gyp#installation) installed.
 
-1. `git clone git://github.com/misskey-delta/Misskey-API.git`
-2. `cd Misskey-API`
+1. `git clone git://github.com/misskey-delta/misskey-api.git`
+2. `cd misskey-api`
 3. `npm install`
 4. `npm run build`
 
@@ -35,9 +35,9 @@ The MIT License. See [LICENSE](LICENSE).
 
 [mit]:             http://opensource.org/licenses/MIT
 [mit-badge]:       https://img.shields.io/badge/license-MIT-444444.svg?style=flat-square
-[travis-link]:     https://travis-ci.org/misskey-delta/Misskey-API
-[travis-badge]:    http://img.shields.io/travis/misskey-delta/Misskey-API.svg?style=flat-square
-[david-link]:      https://david-dm.org/misskey-delta/Misskey-API
-[david-badge]:     https://img.shields.io/david/misskey-delta/Misskey-API.svg?style=flat-square
-[david-dev-link]:  https://david-dm.org/misskey-delta/Misskey-API#info=devDependencies&view=table
-[david-dev-badge]: https://img.shields.io/david/dev/misskey-delta/Misskey-API.svg?style=flat-square
+[travis-link]:     https://travis-ci.org/misskey-delta/misskey-api
+[travis-badge]:    http://img.shields.io/travis/misskey-delta/misskey-api.svg?style=flat-square
+[david-link]:      https://david-dm.org/misskey-delta/misskey-api
+[david-badge]:     https://img.shields.io/david/misskey-delta/misskey-api.svg?style=flat-square
+[david-dev-link]:  https://david-dm.org/misskey-delta/misskey-api#info=devDependencies&view=table
+[david-dev-badge]: https://img.shields.io/david/dev/misskey-delta/misskey-api.svg?style=flat-square
