@@ -39,7 +39,10 @@ export default (
 			type: type,
 			content: content
 		}, (err:any, createdNotification: INotification) => {
-			if (err) reject(err);
+			if (err) {
+				reject(err);
+				return;
+			}
 			event.publishNotification(createdNotification);
 			resolve(createdNotification);
 		});
