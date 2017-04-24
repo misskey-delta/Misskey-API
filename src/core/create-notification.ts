@@ -13,22 +13,24 @@ export default (
 		app: app || null,
 		user: userId,
 		type: type
-	}).limit(1).sort('-$natural').exec((err: any, notifications: INotification[]) => {
-		const lastOneNotification: INotification = notifications[0] || null;
-		// check notify already sent.
-		if (lastOneNotification) {
-			// check lastOne's content whether it's same as passed content
-			const similar = Object.keys(lastOneNotification.content).every(
-				key => lastOneNotification.content[key] === content[key]
-			)
-			// if similar, calc delay.
-			if (similar) {
-				const createdAt: Date = lastOneNotification.createdAt;
-				const delay = Date.now() - createdAt.getTime();
-				// notified similer notification within 10 min, stop.
-				if (delay < (10 * 60 * 1000)) {
-					resolve(lastOneNotification);
-					return;
+	}).limit(1).sort('-$natural').exec((findErr: any, notifications: INotification[]) => {
+		if (! findErr) {
+			const lastOneNotification: INotification = notifications[0] || null;
+			// check notify already sent.
+			if (lastOneNotification) {
+				// check lastOne's content whether it's same as passed content
+				const similar = Object.keys(lastOneNotification.content).every(
+					key => lastOneNotification.content[key] === content[key]
+				);
+				// if similar, calc delay.
+				if (similar) {
+					const createdAt: Date = lastOneNotification.createdAt;
+					const delay = Date.now() - createdAt.getTime();
+					// notified similer notification within 10 min, stop.
+					if (delay < (10 * 60 * 1000)) {
+						resolve(lastOneNotification);
+						return;
+					}
 				}
 			}
 		}
@@ -38,9 +40,9 @@ export default (
 			user: userId,
 			type: type,
 			content: content
-		}, (err:any, createdNotification: INotification) => {
-			if (err) {
-				reject(err);
+		}, (createErr: any, createdNotification: INotification) => {
+			if (createErr) {
+				reject(createErr);
 				return;
 			}
 			event.publishNotification(createdNotification);
