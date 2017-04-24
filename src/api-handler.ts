@@ -24,13 +24,13 @@ export default function(endpoint: any, req: any, res: any): void {
 		if (endpoint.login) {
 			// userない
 			if (context.user === undefined || context.user === null) {
-				reply({
+				return reply({
 					error: 'plz-authenticate'
 				}).code(401);
 			}
 			// 凍結で使わせないやつは凍結されてたら蹴る
 			if (endpoint.denySuspended && context.user.isSuspended) {
-				reply({
+				return reply({
 					error: 'denied-cuz-u-r-suspended'
 				}).code(403);
 			}
