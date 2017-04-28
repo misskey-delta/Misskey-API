@@ -1,7 +1,16 @@
 import * as mongoose from 'mongoose';
 import config from '../config';
 
-const db = mongoose.createConnection(config.mongo.uri, config.mongo.options);
+// use native promise
+(<any>mongoose).Promise = global.Promise
+const options = Object.assign(
+    {
+        promiseLibrary: global.Promise
+    },
+    config.mongo.options
+)
+
+const db = mongoose.createConnection(config.mongo.uri, options);
 
 import albumFile from './schemas/album-file';
 import albumFolder from './schemas/album-folder';
