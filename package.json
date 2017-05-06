@@ -17,7 +17,7 @@
     "@types/bcrypt": "1.0.0",
     "@types/body-parser": "1.16.3",
     "@types/gm": "1.17.30",
-    "@types/hapi": "16.0.4",
+    "@types/hapi": "16.0.5",
     "@types/mongoose": "4.7.11",
     "@types/mongoose-auto-increment": "5.0.29",
     "@types/multer": "0.0.33",
