@@ -5,7 +5,7 @@ export default function serializePost(
 	post: any,
 	me: IUser = null,
 	includeReply: boolean = true
-): Promise<Object> {
+): Promise<any> {
 	const postObj = post.toObject();
 
 	return new Promise<Object>((resolve, reject) => {

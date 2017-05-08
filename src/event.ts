@@ -2,7 +2,7 @@ import * as redis from 'redis';
 import {UserFollowing} from './db/db';
 import {IUser, IPost, IRepost, IUserFollowing, INotification, ITalkGroup, ITalkMessage, ITalkUserMessage} from './db/interfaces';
 import config from './config';
-import showPost from './endpoints/posts/show';
+import serializePost from './core/serialize-post';
 
 export interface MisskeyEventMessage {
 	type: string;
@@ -26,12 +26,7 @@ class MisskeyEvent {
 	}
 
 	public publishPost(userId: string, post: IPost | IRepost): void {
-		showPost(null, post.id).then(postData => {
-			const postObj = JSON.stringify({
-				type: 'post',
-				value: postData
-			});
-
+		const publisher = ((postObj: string, publish = this.publish) => {
 			// 自分のストリーム
 			this.publish(`user-stream:${userId}`, postObj);
 
@@ -41,7 +36,29 @@ class MisskeyEvent {
 					this.publish(`user-stream:${follower.follower}`, postObj);
 				});
 			});
-		});
+		}).bind(this);
+
+		if (post.type === 'status') {
+			serializePost(post, null, false).then(serializedPost => {
+				// 配信段階でまさかlikeしてるわけないだろ
+				serializedPost.isLiked = false;
+				serializedPost.isReposted = false;
+				// ストリームやってるstream-handlers/homeに伝えるためのやつ
+				serializedPost.serialized = true;
+				publisher(JSON.stringify({
+					type: 'post',
+					value: serializedPost,
+					serialized: true
+				}));
+			});
+		} else {
+			publisher(JSON.stringify({
+				type: 'post',
+				value: {
+					id: post.id
+				}
+			}));
+		}
 	}
 
 	public publishNotification(notification: INotification): void {

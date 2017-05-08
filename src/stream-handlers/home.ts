@@ -13,7 +13,13 @@ export default async function(user: IUser, ws: Websocket): Promise<void> {
 	async function subscriber(message: MisskeyEventMessage): Promise<void> {
 		switch (message.type) {
 			case 'post':
-				const post = message.value;
+				let post: any;
+				if (message.value.serialized) {
+					delete message.value.serialized;
+					post = message.value;
+				} else {
+					post = await posts_show(user, message.value.id);
+				}
 				sendEvent({
 					type: message.type,
 					value: post
