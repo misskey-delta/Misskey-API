@@ -2,6 +2,7 @@ import * as redis from 'redis';
 import {UserFollowing} from './db/db';
 import {IUser, IPost, IRepost, IUserFollowing, INotification, ITalkGroup, ITalkMessage, ITalkUserMessage} from './db/interfaces';
 import config from './config';
+import showPost from './endpoints/posts/show';
 
 export interface MisskeyEventMessage {
 	type: string;
@@ -25,18 +26,20 @@ class MisskeyEvent {
 	}
 
 	public publishPost(userId: string, post: IPost | IRepost): void {
-		const postObj = JSON.stringify({
-			type: 'post',
-			value: post
-		});
+		showPost(null, post.id).then(postData => {
+			const postObj = JSON.stringify({
+				type: 'post',
+				value: postData
+			});
 
-		// 自分のストリーム
-		this.publish(`user-stream:${userId}`, postObj);
+			// 自分のストリーム
+			this.publish(`user-stream:${userId}`, postObj);
 
-		// 自分のフォロワーのストリーム
-		UserFollowing.find({followee: userId}, (_: any, followers: IUserFollowing[]) => {
-			followers.forEach(follower => {
-				this.publish(`user-stream:${follower.follower}`, postObj);
+			// 自分のフォロワーのストリーム
+			UserFollowing.find({followee: userId}, (_: any, followers: IUserFollowing[]) => {
+				followers.forEach(follower => {
+					this.publish(`user-stream:${follower.follower}`, postObj);
+				});
 			});
 		});
 	}
