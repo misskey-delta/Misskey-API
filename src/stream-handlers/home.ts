@@ -13,7 +13,7 @@ export default async function(user: IUser, ws: Websocket): Promise<void> {
 	async function subscriber(message: MisskeyEventMessage): Promise<void> {
 		switch (message.type) {
 			case 'post':
-				const post = await posts_show(user, message.value.id);
+				const post = message.value;
 				sendEvent({
 					type: message.type,
 					value: post

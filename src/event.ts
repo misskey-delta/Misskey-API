@@ -27,9 +27,7 @@ class MisskeyEvent {
 	public publishPost(userId: string, post: IPost | IRepost): void {
 		const postObj = JSON.stringify({
 			type: 'post',
-			value: {
-				id: post.id
-			}
+			value: post
 		});
 
 		// 自分のストリーム
