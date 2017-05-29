@@ -33,7 +33,7 @@
     "connect-redis": "3.3.0",
     "fork-for-each-cpu": "1.0.2",
     "gm": "1.23.0",
-    "hapi": "16.1.1",
+    "hapi": "16.2.0",
     "hapi-plugin-websocket": "0.9.6",
     "log-cool": "1.1.0",
     "mongoose": "4.9.7",
