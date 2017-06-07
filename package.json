@@ -19,7 +19,7 @@
     "@types/gm": "1.17.30",
     "@types/hapi": "16.0.5",
     "@types/mongoose": "4.7.11",
-    "@types/mongoose-auto-increment": "5.0.29",
+    "@types/mongoose-auto-increment": "5.0.30",
     "@types/multer": "0.0.33",
     "@types/ratelimiter": "2.1.28",
     "@types/redis": "0.12.36",
