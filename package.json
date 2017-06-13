@@ -24,7 +24,7 @@
     "@types/ratelimiter": "2.1.28",
     "@types/redis": "2.6.0",
     "@types/request": "0.0.43",
-    "@types/ws": "0.0.41",
+    "@types/ws": "0.0.42",
     "tslint": "5.4.3",
     "typescript": "2.3.4"
   },
