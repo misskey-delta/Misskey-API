@@ -17,16 +17,16 @@
     "@types/bcrypt": "1.0.0",
     "@types/body-parser": "1.16.3",
     "@types/gm": "1.17.30",
-    "@types/hapi": "16.0.5",
-    "@types/mongoose": "4.7.11",
+    "@types/hapi": "16.1.4",
+    "@types/mongoose": "4.7.17",
     "@types/mongoose-auto-increment": "5.0.29",
     "@types/multer": "0.0.33",
     "@types/ratelimiter": "2.1.28",
     "@types/redis": "0.12.36",
     "@types/request": "0.0.43",
     "@types/ws": "0.0.41",
-    "tslint": "5.2.0",
-    "typescript": "2.3.2"
+    "tslint": "5.4.3",
+    "typescript": "2.3.4"
   },
   "dependencies": {
     "bcrypt": "1.0.2",
@@ -34,16 +34,16 @@
     "fork-for-each-cpu": "1.0.2",
     "gm": "1.23.0",
     "hapi": "16.4.3",
-    "hapi-plugin-websocket": "0.9.6",
+    "hapi-plugin-websocket": "1.2.2",
     "log-cool": "1.1.0",
-    "mongoose": "4.9.7",
+    "mongoose": "4.10.5",
     "mongoose-auto-increment": "5.0.1",
     "mongoose-deep-populate": "3.0.0",
     "powerful": "8.0.1",
     "ratelimiter": "3.0.3",
     "redis": "2.7.1",
     "request": "2.81.0",
-    "ws": "2.2.3"
+    "ws": "3.0.0"
   },
   "private": true
 }
