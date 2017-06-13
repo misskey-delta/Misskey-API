@@ -26,7 +26,7 @@
     "@types/request": "0.0.43",
     "@types/ws": "0.0.41",
     "tslint": "5.2.0",
-    "typescript": "2.3.2"
+    "typescript": "2.3.4"
   },
   "dependencies": {
     "bcrypt": "1.0.2",
