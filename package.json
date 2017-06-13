@@ -36,7 +36,7 @@
     "hapi": "16.1.1",
     "hapi-plugin-websocket": "0.9.6",
     "log-cool": "1.1.0",
-    "mongoose": "4.9.7",
+    "mongoose": "4.10.5",
     "mongoose-auto-increment": "5.0.1",
     "mongoose-deep-populate": "3.0.0",
     "powerful": "8.0.1",
