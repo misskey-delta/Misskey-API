@@ -15,7 +15,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/bcrypt": "1.0.0",
-    "@types/body-parser": "1.16.3",
+    "@types/body-parser": "1.16.4",
     "@types/gm": "1.17.31",
     "@types/hapi": "16.1.4",
     "@types/mongoose": "4.7.17",
