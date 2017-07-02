@@ -11,12 +11,7 @@ import { logInfo } from 'log-cool';
 export default async function(name: string, ws: Websocket, req: http.IncomingMessage): Promise<void> {
 	logInfo(`Request: stream /streams/${name}`);
 
-	const remoteAddress =  req.connection.remoteAddress;
-
-	const query = (() => {
-		const querystring: string = url_process.parse(remoteAddress).query;
-		return query_process.parse(querystring);
-	})();
+	const query: string[] = query_process.parse(url_process.parse(req.url).query);
 
 	const reject = (mes: string = 'authentication failed') => {
 		const res = {
@@ -49,7 +44,7 @@ export default async function(name: string, ws: Websocket, req: http.IncomingMes
 	}
 
 	const handler = require(`./stream-handlers/${name}`).default;
-	handler(user, ws, remoteAddress);
+	handler(user, ws, query);
 }
 
 // toriaezu

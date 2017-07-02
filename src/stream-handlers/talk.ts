@@ -7,9 +7,7 @@ import talkmessages_show from '../endpoints/talks/messages/show';
 import * as url_process from 'url';
 import * as query_process from 'querystring';
 
-export default async function(user: IUser, ws: Websocket, url: string): Promise<void> {
-	const query = query_process.parse(url_process.parse(url).query);
-
+export default async function(user: IUser, ws: Websocket, query: string[]): Promise<void> {
 	if (query['otherparty-id'] === undefined || query['otherparty-id'] === null) {
 		reject("'otherparty-id' is required");
 	}
