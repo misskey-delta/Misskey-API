@@ -8,7 +8,7 @@ import * as query_process from 'querystring';
 
 export default async function(user: IUser, ws: Websocket): Promise<void> {
 	const query = (() => {
-		const q = url_process.parse(ws.upgradeReq.url).query;
+		const q = url_process.parse(ws.url).query;
 		return query_process.parse(q);
 	})();
 

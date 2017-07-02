@@ -11,7 +11,7 @@ export default async function(name: string, ws: Websocket): Promise<void> {
 	logInfo(`Request: stream /streams/${name}`);
 
 	const query = (() => {
-		const url = ws.upgradeReq.url;
+		const url = ws.url;
 		const querystring: string = url_process.parse(url).query;
 		return query_process.parse(querystring);
 	})();
