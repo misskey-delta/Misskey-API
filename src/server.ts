@@ -58,8 +58,12 @@ export default function(): void {
 					plugins: {
 						websocket: {
 							only: true,
-							connect: (wss: Websocket.Server, ws: Websocket, wsf: any, req: http.IncomingMessage) => {
-								streamHandler(name, ws, req);
+							connect: (...args) => {
+								/**
+								 * streamHandler(...args) can't be used
+								 * because an error 'src/server.ts(62,9): error TS2556: Expected 3 arguments, but got a minimum of 0.' occurred.
+								 */
+								streamHandler.apply([name].concat(args));
 							}
 						}
 					}
