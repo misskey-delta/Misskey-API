@@ -2,17 +2,19 @@ import * as hapi from 'hapi';
 import * as Websocket from 'ws';
 import * as url_process from 'url';
 import * as query_process from 'querystring';
+import * as http from 'http';
 import config from './config';
 import { User } from './db/db';
 import { IUser } from './db/interfaces';
 import { logInfo } from 'log-cool';
 
-export default async function(name: string, ws: Websocket): Promise<void> {
+export default async function(name: string, ws: Websocket, req: http.IncomingMessage): Promise<void> {
 	logInfo(`Request: stream /streams/${name}`);
 
+	const remoteAddress =  req.connection.remoteAddress;
+
 	const query = (() => {
-		const url = ws.url;
-		const querystring: string = url_process.parse(url).query;
+		const querystring: string = url_process.parse(remoteAddress).query;
 		return query_process.parse(querystring);
 	})();
 
@@ -47,7 +49,7 @@ export default async function(name: string, ws: Websocket): Promise<void> {
 	}
 
 	const handler = require(`./stream-handlers/${name}`).default;
-	handler(user, ws);
+	handler(user, ws, remoteAddress);
 }
 
 // toriaezu

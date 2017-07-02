@@ -4,7 +4,7 @@ import event, { MisskeyEventMessage } from '../event';
 import posts_show from '../endpoints/posts/show';
 import notifications_show from '../endpoints/notifications/show';
 
-export default async function(user: IUser, ws: Websocket): Promise<void> {
+export default async function(user: IUser, ws: Websocket, url: string): Promise<void> {
 	const client = event.subscribeUserStream(user.id, subscriber);
 	ws.on('close', (code, mes) => {
 		client.quit();

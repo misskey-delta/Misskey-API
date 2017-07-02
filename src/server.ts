@@ -5,6 +5,7 @@ import * as hapi from 'hapi';
 import hapiws = require('hapi-plugin-websocket');
 import * as Websocket from 'ws';
 import * as url from 'url';
+import * as http from 'http';
 
 import httpEndpoints from './http-endpoints';
 import streamEndpoints from './stream-endpoints';
@@ -57,8 +58,8 @@ export default function(): void {
 					plugins: {
 						websocket: {
 							only: true,
-							connect: (wss: Websocket.Server, ws: Websocket) => {
-								streamHandler(name, ws);
+							connect: (wss: Websocket.Server, ws: Websocket, wsf: any, req: http.IncomingMessage) => {
+								streamHandler(name, ws, req);
 							}
 						}
 					}
