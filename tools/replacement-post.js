@@ -23,7 +23,7 @@ if (!postIdElem) process.exit(1)
 const postIdElemArr = postIdElem.split('/')
 const postId = postIdElemArr[postIdElemArr.length - 1]
 
-// get post
+// get post & change to random hash
 const text = require('crypto').randomBytes(16).toString('hex')
 postsModel.findById(postId).then(post => {
     // if reply, remove inReplyToPost & set type to status
@@ -33,6 +33,8 @@ postsModel.findById(postId).then(post => {
         post.type = 'status'
     }
     post.text = text
+    // for future changing
+    post.isDeleted = true
     post.save().then(uPost => {
         console.log(`replacement change happened at post identified by id ${uPost._id}.`)
         process.exit(0)
