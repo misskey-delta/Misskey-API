@@ -10,7 +10,9 @@
     "start": "node ./built/main.js",
     "build": "tsc",
     "lint": "find src -type f -name '*.ts' | xargs tslint",
-    "test": "npm run lint && npm run build"
+    "test": "npm run lint && npm run build",
+    "install": "cp ./git-hooks/* .git/hooks",
+    "update": "cp ./git-hooks/* .git/hooks"
   },
   "license": "MIT",
   "devDependencies": {
@@ -24,7 +26,7 @@
     "@types/ratelimiter": "2.1.28",
     "@types/redis": "2.6.0",
     "@types/request": "2.0.0",
-    "@types/ws": "3.0.0",
+    "@types/ws": "3.0.2",
     "tslint": "5.4.3",
     "typescript": "2.4.1"
   },
@@ -36,7 +38,7 @@
     "hapi": "16.4.3",
     "hapi-plugin-websocket": "1.2.8",
     "log-cool": "1.1.0",
-    "mongoose": "4.11.0",
+    "mongoose": "4.11.5",
     "mongoose-auto-increment": "5.0.1",
     "mongoose-deep-populate": "3.0.0",
     "powerful": "8.0.1",
