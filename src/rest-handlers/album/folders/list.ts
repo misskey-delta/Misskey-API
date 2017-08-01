@@ -1,5 +1,5 @@
 import {IApplication, IUser} from '../../../db/interfaces';
-import folders from '../../../endpoints/album/folders/list';
+import getFolders from '../../../endpoints/album/folders/list';
 
 export default function(
 	app: IApplication,
@@ -7,7 +7,7 @@ export default function(
 	req: any,
 	res: any
 ): void {
-	folders(user, req.payload['folder-id']).then(folders => {
+	getFolders(user, req.payload['folder-id']).then(folders => {
 		res(folders);
 	}, (err: any) => {
 		res({error: err}).code(500);
