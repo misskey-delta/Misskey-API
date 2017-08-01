@@ -23,7 +23,7 @@ export default function(
 	const mimetype: string = file.headers['content-type'];
 	const fileBuffer: Buffer = fs.readFileSync(path);
 	const size: number = file.bytes;
-	fs.unlink(path, (e) => console.dir(e));
+	fs.unlink(path, (e) => e !== null && console.dir(e));
 
 	upload(
 		app,
