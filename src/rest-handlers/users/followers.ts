@@ -1,5 +1,5 @@
 import {IApplication, IUser} from '../../db/interfaces';
-import followers from '../../endpoints/users/followers';
+import getFollowers from '../../endpoints/users/followers';
 
 export default function(
 	app: IApplication,
@@ -7,7 +7,7 @@ export default function(
 	req: any,
 	res: any
 ): void {
-	followers(
+	getFollowers(
 		user,
 		req.payload['user-id'],
 		req.payload['limit'],

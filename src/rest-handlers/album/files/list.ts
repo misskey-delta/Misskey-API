@@ -1,5 +1,5 @@
 import {IApplication, IUser} from '../../../db/interfaces';
-import files from '../../../endpoints/album/files/list';
+import getFiles from '../../../endpoints/album/files/list';
 
 export default function(
 	app: IApplication,
@@ -7,7 +7,7 @@ export default function(
 	req: any,
 	res: any
 ): void {
-	files(
+	getFiles(
 		user,
 		req.payload['folder-id'],
 		req.payload['limit'],

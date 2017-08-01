@@ -1,5 +1,5 @@
 import {IApplication, IUser} from '../../db/interfaces';
-import following from '../../endpoints/users/following';
+import getFollowings from '../../endpoints/users/following';
 
 export default function(
 	app: IApplication,
@@ -7,14 +7,14 @@ export default function(
 	req: any,
 	res: any
 ): void {
-	following(
+	getFollowings(
 		user,
 		req.payload['user-id'],
 		req.payload['limit'],
 		req.payload['since-cursor'],
 		req.payload['max-cursor']
-	).then(following => {
-		res(following);
+	).then(followings => {
+		res(followings);
 	}, (err: any) => {
 		res({error: err}).code(500);
 	});
