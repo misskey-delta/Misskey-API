@@ -36,7 +36,7 @@
     "fork-for-each-cpu": "1.0.2",
     "gm": "1.23.0",
     "hapi": "16.5.1",
-    "hapi-plugin-websocket": "1.2.15",
+    "hapi-plugin-websocket": "1.2.16",
     "log-cool": "1.1.0",
     "mongoose": "4.11.5",
     "mongoose-auto-increment": "5.0.1",
