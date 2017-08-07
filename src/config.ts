@@ -18,7 +18,14 @@ function loadConfig(): IConfig {
 	return config;
 }
 
-export interface IConfig {
+type IConfig = IConfigFile & {
+	jws: {
+		algorithm: string;
+		key: string;
+	}
+};
+
+export interface IConfigFile {
 	mongo: {
 		uri: string,
 		options: {
@@ -54,8 +61,6 @@ export interface IConfig {
 	};
 	jws: {
 		infoUrl: string;
-		algorithm: string;
-		key: string;
 	};
 	token: {
 		cacheSeconds: number;
