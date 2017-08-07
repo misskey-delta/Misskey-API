@@ -23,9 +23,18 @@ export default function(
 	const mimetype: string = file.headers['content-type'];
 	const fileBuffer: Buffer = fs.readFileSync(path);
 	const size: number = file.bytes;
-	fs.unlink(path, (e) => e !== null && console.dir(e));
 
-	upload(
+	const unlinking = new Promise<void>((resolve, reject) => {
+		fs.unlink(path, (e) => {
+			if (e === null) {
+				resolve();
+			} else {
+				reject(e);
+			}
+		});
+	});
+
+	const uploading = upload(
 		app,
 		user,
 		fileName,
@@ -34,9 +43,14 @@ export default function(
 		size,
 		folder,
 		unconditional
-	).then(albumFile => {
-		res(albumFile);
-	}, (err: any) => {
-		res({error: err}).code(500);
-	});
+	);
+
+	Promise.all([unlinking, uploading])
+		.then(a => a[1])
+		.then(albumFile => {
+			res(albumFile);
+		})
+		.catch(err => {
+			res({error: err}).code(500);
+		});
 }
