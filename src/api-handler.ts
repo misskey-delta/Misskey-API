@@ -1,6 +1,5 @@
 /* tslint:disable:variable-name */
 
-import * as hapi from 'hapi';
 import * as redis from 'redis';
 import * as Limiter from 'ratelimiter';
 import authenticate from './authenticate';
@@ -14,7 +13,7 @@ const limiterDB = redis.createClient(
 		auth_pass: config.redis.password
 	});
 
-export default function(endpoint: any, req: hapi.Request, res: any): void {
+export default function(endpoint: any, req: any, res: any): void {
 	logInfo(`Request: ${req.method} ${req.path}`);
 
 	function reply(data: any): any {
