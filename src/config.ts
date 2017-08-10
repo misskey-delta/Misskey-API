@@ -1,3 +1,5 @@
+import * as request from  'request';
+
 const homeDirPath: string = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
 const configDirName = '.misskey';
 const configFileName = 'api.json';
@@ -7,10 +9,23 @@ const configPath = `${configDirectoryPath}/${configFileName}`;
 export default loadConfig();
 
 function loadConfig(): IConfig {
-	return <IConfig>require(configPath);
+	const config = <IConfig>require(configPath);
+	request.get(config.jws.infoUrl, (err, _, body) => {
+		const temp = JSON.parse(body);
+		config.jws.algorithm = temp.algorithm;
+		config.jws.key = temp.key;
+	});
+	return config;
 }
 
-export interface IConfig {
+type IConfig = IConfigFile & {
+	jws: {
+		algorithm: string;
+		key: string;
+	}
+};
+
+export interface IConfigFile {
 	mongo: {
 		uri: string,
 		options: {
@@ -29,6 +44,11 @@ export interface IConfig {
 		ip: string,
 		port: number
 	};
+	authServer: {
+		url: string;
+		ip: string;
+		port: number;
+	};
 	apiPasskey: string;
 	port: {
 		http: number,
@@ -38,5 +58,11 @@ export interface IConfig {
 		enable: boolean;
 		keyPath: string;
 		certPath: string;
+	};
+	jws: {
+		infoUrl: string;
+	};
+	token: {
+		cacheSeconds: number;
 	};
 }
