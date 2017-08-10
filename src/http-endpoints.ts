@@ -240,16 +240,5 @@ export default [
 		denySuspended: true },
 
 	{ name: 'hashtags/search' },
-	{ name: 'hashtags/trend/show' },
-
-	{ name: 'bbs/topics/create',
-		login: true,
-		limitDuration: day,
-		limitMax: 30,
-		denySuspended: true },
-	{ name: 'bbs/posts/create',
-		login: true,
-		limitDuration: hour,
-		limitMax: 120,
-		denySuspended: true }
+	{ name: 'hashtags/trend/show' }
 ];
