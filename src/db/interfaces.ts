@@ -272,36 +272,3 @@ export interface ITalkUserHistory extends ITalkHistory {
 export interface ITalkGroupHistory extends ITalkHistory {
 	group: string | Types.ObjectId | ITalkGroup;
 }
-
-export interface IBBSTopic extends Document {
-	bookmarksCount: number;
-	createdAt: Date;
-	cursor: number;
-	pinnedPost: string | Types.ObjectId | IBBSPost;
-	title: string;
-	user: string | Types.ObjectId | IUser;
-	id: string;
-}
-
-export interface IBBSPost extends Document {
-	app: string | Types.ObjectId | IApplication;
-	files: string | Types.ObjectId[] | IAlbumFile[];
-	createdAt: Date;
-	cursor: number;
-	inReplyToPost: string | Types.ObjectId | IBBSPost;
-	isContentModified: boolean;
-	isDeleted: boolean;
-	isPlain: boolean;
-	likesCount: number;
-	repliesCount: number;
-	text: string;
-	topic: string | Types.ObjectId | IBBSTopic;
-	user: string | Types.ObjectId | IUser;
-	id: string;
-}
-
-export interface IBBSWatching extends Document {
-	createdAt: Date;
-	topic: string | Types.ObjectId | IBBSTopic;
-	user: string | Types.ObjectId | IUser;
-}
