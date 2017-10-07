@@ -1,10 +1,26 @@
 import {dataSize} from 'powerful';
 import * as crypto from 'crypto';
-import * as request from 'request';
+import * as request from 'request-promise-native';
+import { StatusCodeError } from 'request-promise-native/errors';
 import * as gm from 'gm';
 import {AlbumFile, AlbumFolder} from '../db/db';
 import {IAlbumFile, IAlbumFolder} from '../db/interfaces';
 import config from '../config';
+
+import { Types } from 'mongoose';
+
+const getPictureProperty = (file, fileName) => new Promise((resolve, reject) => {
+	gm(file, fileName).size((getSizeErr: any, whsize: any) => {
+		if (getSizeErr !== undefined && getSizeErr !== null) {
+			console.error(getSizeErr);
+			return resolve();
+		}
+		return resolve({
+			width: whsize.width,
+			height: whsize.height
+		});
+	});
+});
 
 /**
  * アルバムにファイルを追加します
@@ -18,7 +34,7 @@ import config from '../config';
  * @param unconditional trueに設定すると、ハッシュが同じファイルが見つかった場合でも無視してアルバムに登録します
  * @return 追加したファイルオブジェクト
  */
-export default function(
+export default async function(
 	appId: string,
 	userId: string,
 	fileName: string,
@@ -34,134 +50,88 @@ export default function(
 		.update(file)
 		.digest('hex');
 
-	return new Promise<IAlbumFile>((resolve, reject) => {
-		if (!unconditional) {
-			// 同じハッシュ(と同じファイルサイズ(念のため))を持つファイルが既に存在するか確認
-			AlbumFile.findOne({
-				user: userId,
-				isDeleted: false, // 削除されているファイルは除外する
-				hash: hash,
-				dataSize: size
-			}, (hashmuchFileFindErr: any, hashmuchFile: IAlbumFile) => {
-				if (hashmuchFileFindErr !== null) {
-					console.error(hashmuchFileFindErr);
-					return reject('something-happend');
-				}
-
-				// 無かったら新規登録
-				if (hashmuchFile === null) {
-					register();
-				} else {
-					// あったら登録せずにそれを返却
-					resolve(hashmuchFile);
-				}
-			});
-		} else {
-			// unconditionalがtrueの場合は強制登録
-			register();
+	if (!unconditional) {
+		const af = await AlbumFile.findOne({
+			user: userId,
+			isDeleted: false, // 削除されているファイルは除外する
+			hash: hash,
+			dataSize: size
+		}) as IAlbumFile;
+		if (af) {
+			return af;
 		}
+	}
 
-		function register(): void {
-			// アルバム使用量を取得するためにすべてのファイルを取得
-			AlbumFile.find({user: userId}, (albumFilesFindErr: any, albumFiles: IAlbumFile[]) => {
-				if (albumFilesFindErr !== null) {
-					console.error(albumFilesFindErr);
-					return reject(albumFilesFindErr);
-				}
+	const aggregates = await AlbumFile.aggregate({
+		$match: { "user": Types.ObjectId(userId) }
+	}, {
+		$group: { '_id': '$user', "total": { "$sum": "$dataSize" }}
+	}) as {
+		_id: Types.ObjectId,
+		total: number
+	}[];
 
-				// 現時点でのアルバム使用量を算出(byte)
-				const used = albumFiles.map(albumFile => albumFile.dataSize).reduce((x, y) => x + y, 0);
+	// note: アルバムにファイルがない場合は undefined の場合がある
+	const aggregate = aggregates.shift();
 
-				// 1000MBを超える場合
-				if (used + size > dataSize.fromMiB(1000)) {
-					return reject('no-free-space');
-				}
+	// 1000MBを超える場合
+	if (aggregate && aggregate.total + size > dataSize.fromMiB(1000)) {
+		throw 'no-free-space';
+	}
 
-				if (folderId !== null) {
-					AlbumFolder.findById(folderId, (folderFindErr: any, folder: IAlbumFolder) => {
-						if (folderFindErr !== null) {
-							return reject(folderFindErr);
-						} else if (folder === null) {
-							return reject('folder-not-found');
-						} else if (folder.user.toString() !== userId) {
-							return reject('folder-not-found');
+	// フォルダが指定されてる場合
+	if (folderId) {
+		const folder = await AlbumFolder.findById(folderId) as IAlbumFolder;
+		if (!folder || folder.user.toString() === userId) {
+			throw 'folder-not-found';
+		}
+		return await create(folder);
+	}
+
+	return await create();
+
+	async function create (folder: IAlbumFolder = null): Promise<IAlbumFile> {
+		const albumFile = await AlbumFile.create({
+			app: appId !== null ? appId : null,
+			user: userId,
+			folder: folder ? folder.id : null,
+			dataSize: size,
+			mimeType: mimetype,
+			name: fileName,
+			serverPath: null,
+			hash: hash
+		}) as IAlbumFile;
+		try {
+			const path = await request.post({
+				url: `http://${config.fileServer.host}/register`,
+				formData: {
+					'file-id': albumFile.id,
+					'passkey': config.fileServer.passkey,
+					file: {
+						value: file,
+						options: {
+							filename: fileName
 						}
-						create(folder);
-					});
-				} else {
-					create(null);
-				}
-
-				function create(folder: IAlbumFolder = null): void {
-					// AlbumFileドキュメントを作成
-					AlbumFile.create({
-						app: appId !== null ? appId : null,
-						user: userId,
-						folder: folder !== null ? folder.id : null,
-						dataSize: size,
-						mimeType: mimetype,
-						name: fileName,
-						serverPath: null,
-						hash: hash
-					}, (albumFileCreateErr: any, albumFile: IAlbumFile) => {
-						if (albumFileCreateErr !== null) {
-							console.error(albumFileCreateErr);
-							return reject(albumFileCreateErr);
-						}
-						// ファイルをサーバーにアップロード
-						request.post({
-							url: `http://${config.fileServer.host}/register`,
-							formData: {
-								'file-id': albumFile.id,
-								'passkey': config.fileServer.passkey,
-								file: {
-									value: file,
-									options: {
-										filename: fileName
-									}
-								}
-							}
-						}, (uploadErr: any, _: any, path: any) => {
-							if (uploadErr !== null) {
-								console.error(uploadErr);
-								return reject(uploadErr);
-							}
-
-							// 最終的にファイルが登録されたサーバーのパスを保存
-							albumFile.serverPath = path;
-
-							// 画像だった場合
-							if (/^image\/.*$/.test(mimetype)) {
-								// 幅と高さを取得してプロパティに保存しておく
-								(<any>gm)(file, fileName)
-								.size((getSizeErr: any, whsize: any) => {
-									if (getSizeErr !== undefined && getSizeErr !== null) {
-										console.error(getSizeErr);
-										return save(albumFile);
-									}
-									albumFile.properties = {
-										width: whsize.width,
-										height: whsize.height
-									};
-									save(albumFile);
-								});
-							} else {
-								save(albumFile);
-							}
-						});
-					});
+					}
 				}
 			});
-		}
-
-		function save(albumFile: IAlbumFile): void {
-			albumFile.save((saveErr: any, saved: IAlbumFile) => {
-				if (saveErr !== null) {
-					console.error(saveErr);
-					return reject(saveErr);
+			albumFile.serverPath = path;
+			// 画像だった場合幅と高さを取得してプロパティに保存しておく
+			if (/^image\/.*$/.test(mimetype)) {
+				const properties = await getPictureProperty(file, fileName);
+				if (properties) {
+					albumFile.properties = properties;
 				}
-				resolve(saved);
-			});
+			}
+			await albumFile.save();
+			return albumFile;
+		} catch (e) {
+			// remove temporary document
+			await albumFile.remove();
+			if (e instanceof StatusCodeError) {
+				throw e.message;
+			}
+			throw e;
 		}
-	});
+	}
 }
