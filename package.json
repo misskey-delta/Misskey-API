@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node ./built/main.js",
     "build": "tsc",
-    "lint": "find src -type f -name '*.ts' | xargs tslint",
+    "lint": "find src -type f -name '*.ts' | xargs tslint --fix",
     "test": "npm run lint && npm run build",
     "install": "cp ./git-hooks/* .git/hooks",
     "update": "cp ./git-hooks/* .git/hooks"

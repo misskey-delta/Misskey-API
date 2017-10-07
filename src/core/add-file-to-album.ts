@@ -1,6 +1,7 @@
 import {dataSize} from 'powerful';
 import * as crypto from 'crypto';
 import * as request from 'request-promise-native';
+import { StatusCodeError } from 'request-promise-native/errors';
 import * as gm from 'gm';
 import {AlbumFile, AlbumFolder} from '../db/db';
 import {IAlbumFile, IAlbumFolder} from '../db/interfaces';
@@ -127,8 +128,8 @@ export default async function(
 		} catch (e) {
 			// remove temporary document
 			await albumFile.remove();
-			if (e.name === 'StatusCodeError') {
-				throw e.response.body;
+			if (e instanceof StatusCodeError) {
+				throw e.message;
 			}
 			throw e;
 		}
