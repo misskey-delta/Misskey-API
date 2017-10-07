@@ -20,7 +20,7 @@ export default function(user: IUser, fileId: string): Promise<Object> {
 				reject('file-not-found');
 			} else {
 				request.del({
-					url: `http://${config.fileServer.ip}:${config.fileServer.port}/delete`,
+					url: `http://${config.fileServer.host}/delete`,
 					form: {
 						passkey: config.fileServer.passkey,
 						path: file.serverPath

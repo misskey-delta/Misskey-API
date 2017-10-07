@@ -110,7 +110,7 @@ export default function(
 						}
 						// ファイルをサーバーにアップロード
 						request.post({
-							url: `http://${config.fileServer.ip}:${config.fileServer.port}/register`,
+							url: `http://${config.fileServer.host}/register`,
 							formData: {
 								'file-id': albumFile.id,
 								'passkey': config.fileServer.passkey,

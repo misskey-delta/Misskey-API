@@ -26,8 +26,7 @@ export interface IConfig {
 	fileServer: {
 		passkey: string,
 		url: string,
-		ip: string,
-		port: number
+		host: string
 	};
 	apiPasskey: string;
 	port: {
