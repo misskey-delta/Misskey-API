@@ -70,12 +70,8 @@ export default async function(
 
 	const aggregate = aggregates.shift()
 
-	console.log(aggregates);
-	console.log(aggregate.total);
-	if (aggregate) throw new Error ('POE POE');
-
 	// 1000MBを超える場合
-	if (aggregate.total + size > dataSize.fromMiB(1000)) throw 'no-free-space'
+	if (aggregate && aggregate.total + size > dataSize.fromMiB(1000)) throw 'no-free-space'
 
 	// フォルダが指定されてる場合
 	if (folderId) {
