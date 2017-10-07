@@ -56,7 +56,9 @@ export default async function(
 			hash: hash,
 			dataSize: size
 		}) as IAlbumFile;
-		if (af) return af;
+		if (af) {
+			return af;
+		}
 	}
 
 	const aggregates = await AlbumFile.aggregate({
@@ -68,21 +70,26 @@ export default async function(
 		total: number
 	}[];
 
-	const aggregate = aggregates.shift()
+	// note: アルバムにファイルがない場合は undefined の場合がある
+	const aggregate = aggregates.shift();
 
 	// 1000MBを超える場合
-	if (aggregate && aggregate.total + size > dataSize.fromMiB(1000)) throw 'no-free-space'
+	if (aggregate && aggregate.total + size > dataSize.fromMiB(1000)) {
+		throw 'no-free-space';
+	}
 
 	// フォルダが指定されてる場合
 	if (folderId) {
 		const folder = await AlbumFolder.findById(folderId) as IAlbumFolder;
-		if (!folder || folder.user.toString() === userId) throw 'folder-not-found'
+		if (!folder || folder.user.toString() === userId) {
+			throw 'folder-not-found';
+		}
 		return await create(folder);
 	}
 
 	return await create();
 
-	async function create (folder: IAlbumFolder = null) {
+	async function create (folder: IAlbumFolder = null): Promise<IAlbumFile> {
 		const albumFile = await AlbumFile.create({
 			app: appId !== null ? appId : null,
 			user: userId,
@@ -111,14 +118,19 @@ export default async function(
 			// 画像だった場合幅と高さを取得してプロパティに保存しておく
 			if (/^image\/.*$/.test(mimetype)) {
 				const properties = await getPictureProperty(file, fileName);
-				if (properties) albumFile.properties = properties
+				if (properties) {
+					albumFile.properties = properties;
+				}
 			}
-			await albumFile.save()
-			return albumFile
+			await albumFile.save();
+			return albumFile;
 		} catch (e) {
 			// remove temporary document
-			await albumFile.remove()
-			throw e
+			await albumFile.remove();
+			if (e.name === 'StatusCodeError') {
+				throw e.response.body;
+			}
+			throw e;
 		}
 	}
 }
