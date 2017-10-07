@@ -60,13 +60,16 @@ export default async function(
 	}
 
 	const aggregate = await AlbumFile.aggregate({
-		$match: { "user": userId }
+		$match: { "user": Types.ObjectId(userId) }
 	}, {
 		$group: { '_id': '$user', "total": { "$sum": "$dataSize" }}
-	}) as any;
+	}) as {
+		_id: Types.ObjectId,
+		total: number
+	}[];
 
 	console.log(aggregate);
-	console.log(aggregate.total);
+	console.log(aggregate[0].total);
 	if (aggregate) throw new Error ('POE POE');
 
 	// 1000MBを超える場合
