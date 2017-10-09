@@ -19,6 +19,13 @@ export default function(): void {
 	const server = new hapi.Server();
 	server.connection({ port: config.port.http });
 
+	// '/' for signation
+	server.route({
+		method: 'get',
+		path: '/',
+		handler: (_, reply) => reply().code(204)
+	})
+
 	// REST endpoints routing
 	httpEndpoints.forEach(endpoint => {
 		if (endpoint.name === 'album/files/upload') {
