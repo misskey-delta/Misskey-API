@@ -11,7 +11,7 @@ import { logInfo } from 'log-cool';
 export default async function(name: string, ws: Websocket, req: http.IncomingMessage): Promise<void> {
 	logInfo(`Request: stream /streams/${name}`);
 
-	const query: string[] = query_process.parse(url_process.parse(req.url).query);
+	const query: { [key: string]: string|string[] } = query_process.parse(url_process.parse(req.url).query);
 
 	const reject = (mes: string = 'authentication failed') => {
 		const res = {
