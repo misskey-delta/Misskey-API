@@ -6,7 +6,7 @@ import talkmessages_show from '../endpoints/talks/messages/show';
 import * as url_process from 'url';
 import * as query_process from 'querystring';
 
-export default async function(user: IUser, ws: Websocket, query: string[]): Promise<void> {
+export default async function(user: IUser, ws: Websocket, query: { [key: string]: string|string[] }): Promise<void> {
 	if (query['group-id'] === undefined || query['group-id'] === null) {
 		reject("'group-id' is required");
 		return;

@@ -36,6 +36,9 @@ class MisskeyEvent {
 					this.publish(`user-stream:${follower.follower}`, postObj);
 				});
 			});
+
+			// パブリックストリーム
+			this.publish('public-stream', postObj);
 		}).bind(this);
 
 		if (post.type === 'status') {
@@ -59,6 +62,12 @@ class MisskeyEvent {
 				}
 			}));
 		}
+	}
+
+	public subscribePublicStream(onMessage: (message: MisskeyEventMessage) => void): redis.RedisClient {
+		return this.subscribe('public-stream', mesStr => {
+			onMessage(JSON.parse(mesStr) as MisskeyEventMessage);
+		});
 	}
 
 	public publishNotification(notification: INotification): void {
