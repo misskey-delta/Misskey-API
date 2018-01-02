@@ -33,7 +33,7 @@
   "dependencies": {
     "@types/request-promise-native": "^1.0.7",
     "bcrypt": "1.0.3",
-    "connect-redis": "3.3.2",
+    "connect-redis": "3.3.3",
     "fork-for-each-cpu": "1.0.2",
     "gm": "1.23.0",
     "hapi": "16.6.2",
