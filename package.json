@@ -41,7 +41,7 @@
     "log-cool": "1.1.0",
     "mongoose": "4.12.0",
     "mongoose-auto-increment": "5.0.1",
-    "mongoose-deep-populate": "3.0.0",
+    "mongoose-deep-populate": "3.1.1",
     "powerful": "8.0.1",
     "ratelimiter": "3.0.3",
     "redis": "2.8.0",
